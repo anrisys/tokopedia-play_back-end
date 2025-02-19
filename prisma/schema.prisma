@@ -1,0 +1,44 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+
+model Products {
+  id String @id @default(uuid())
+  title String 
+  url_product String
+  url_image String
+  price Decimal @db.Decimal(10, 2)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Videos {
+  id String @id @default(uuid())
+  title String
+  url_thumbnail String
+  url_video String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  comments Comments[]
+}
+
+model Comments {
+  id String @id @default(uuid())
+  username String @db.VarChar(100)
+  comment String @db.VarChar(255)
+  createdAt DateTime @default(now())
+  videoId String
+  video Videos @relation(fields: [videoId], references: [id])
+}
