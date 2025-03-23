@@ -1,18 +1,5 @@
 import { Comments } from "@prisma/client";
-
-export type CommentResponse = {
-  id: string;
-  username: string;
-  comment: string;
-  createdAt: Date;
-  videoId: string;
-};
-
-export type CreateCommentRequest = {
-  videoId: string;
-  username: string;
-  comment: string;
-};
+import { CommentResponse } from "../types";
 
 export function toCommentResponse(comment: Comments): CommentResponse {
   return {

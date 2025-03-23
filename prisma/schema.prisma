@@ -9,11 +9,26 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  ADMIN
+  SELLER
+  CUSTOMER
+}
 
+model User {
+  id Int @id @default(autoincrement())
+  public_id String @unique
+  email String @unique
+  password String
+  role Role @default(CUSTOMER)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+/*
 model Products {
   id String @id @default(uuid())
   title String 
@@ -42,3 +57,4 @@ model Comments {
   videoId String
   video Videos @relation(fields: [videoId], references: [id])
 }
+*/

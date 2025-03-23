@@ -1,12 +1,12 @@
 {
   "name": "tokopedia-play_backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/application/web.js",
   "scripts": {
-    "start": "ts-node src/index.ts",
+    "start": "node dist/application/web.js",
     "build": "tsc",
-    "serve": "node dist/index.js",
-    "dev": "nodemon ./src/index.ts",
+    "serve": "node dist/application/web.js",
+    "dev": "nodemon --exec ts-node src/application/web.ts",
     "test": "jest"
   },
   "jest": {
@@ -22,6 +22,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "uuidv7": "^1.0.2",
     "winston": "^3.17.0",
     "zod": "^3.24.1"
   },

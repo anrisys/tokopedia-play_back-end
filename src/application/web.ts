@@ -1,9 +1,32 @@
-import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import express, { Application } from "express";
 import { publicRouter } from "../routes/public-api";
 import { errorMiddleware } from "../middlewares/error-middleware";
 
-export const web = express();
-web.use(express.json());
+dotenv.config();
 
-web.use(publicRouter);
-web.use(errorMiddleware);
+export const createApp = (): Application => {
+  const app: Application = express();
+
+  app.use(express.json());
+  app.use(cors());
+
+  app.use(publicRouter);
+  app.use(errorMiddleware);
+
+  return app;
+};
+
+export const startServer = (app: Application) => {
+  const port = process.env.PORT || 3000;
+  app.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+  });
+};
+
+// Only start the server if this file is executed directly
+if (require.main === module) {
+  const app = createApp();
+  startServer(app);
+}

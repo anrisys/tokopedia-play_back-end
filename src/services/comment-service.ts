@@ -1,10 +1,7 @@
 import { prismaClient } from "../application/database";
 import { ResponseError } from "../error/response-error";
-import {
-  CommentResponse,
-  CreateCommentRequest,
-  toCommentResponse,
-} from "../models/comment-model";
+import { CommentResponse, CreateCommentRequest } from "../types";
+import { toCommentResponse } from "../utils";
 import { CommentValidation } from "../validations/comment-validation";
 import { Validation } from "../validations/validation";
 import { VideoValidation } from "../validations/video-validation";
