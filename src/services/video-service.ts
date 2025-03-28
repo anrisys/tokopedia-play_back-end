@@ -1,5 +1,5 @@
 import { prismaClient } from "../application/database";
-import { ResponseError } from "../error/response-error";
+import { ResponseError } from "../error/ResponseError";
 import {
   toVideoResponse,
   VideoListResponse,
