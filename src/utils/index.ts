@@ -1,4 +1,5 @@
+import handlePrismaError from "./handlePrismaError";
 import { toCommentResponse } from "./commentMapper";
 import { toVideoResponse } from "./videoMapper";
 
-export { toCommentResponse, toVideoResponse };
+export { handlePrismaError, toCommentResponse, toVideoResponse };
