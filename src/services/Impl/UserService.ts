@@ -1,3 +1,4 @@
+import bcrypt from "bcrypt";
 import { User } from "@prisma/client";
 import {
   CreateUserInput,
@@ -9,12 +10,33 @@ import { IUserService } from "../Contracts/IUserService";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../types/inversifyTypes";
 import { IUserRepository } from "../../repositories";
+import { BusinessLogicError, NotFoundError } from "../../error/CustomError";
+import { uuidv7 } from "uuidv7";
+import { toPublicUserData } from "../../utils";
 
 @injectable()
 export class UserService implements IUserService {
   constructor(
     @inject(TYPES.IUserRepository) private userRepository: IUserRepository
   ) {}
+
+  async deleteUser(public_id: string): Promise<void> {
+    const user = await this.isUserFound(public_id);
+
+    await this.userRepository.deleteUser(user.id);
+  }
+
+  async validateCredentials(
+    email: string,
+    password: string
+  ): Promise<{ user: PublicUserProfile } | null> {
+    const user = await this.userRepository.findByEmail(email);
+    if (!user) return null;
+
+    const isValid = await bcrypt.compare(password, user.password);
+
+    return isValid ? { user: toPublicUserData(user) } : null;
+  }
 
   async listUsers(
     options?: ListUsersOptions
@@ -39,13 +61,51 @@ export class UserService implements IUserService {
     return { users: publicUsers, total };
   }
 
-  updateUser(public_id: string, data: UpdateUserInput): Promise<User> {
-    throw new Error("Method not implemented.");
+  async updateUser(public_id: string, data: UpdateUserInput): Promise<User> {
+    const user = await this.isUserFound(public_id);
+
+    const updatedUser = await this.userRepository.updateUser(user.id, {
+      email: data.email,
+      password: data.password,
+    });
+
+    return updatedUser;
   }
-  showUser(public_id: string): Promise<User | null> {
-    throw new Error("Method not implemented.");
+
+  async showUser(public_id: string): Promise<PublicUserProfile> {
+    const user = await this.isUserFound(public_id);
+
+    return toPublicUserData(user);
   }
-  createUser(data: CreateUserInput): Promise<User> {
-    throw new Error("Method not implemented.");
+
+  async createUser(data: CreateUserInput): Promise<User> {
+    const isEmailAlreadyRegistered =
+      await this.userRepository.isEmailAlreadyRegistered(data.email);
+
+    if (isEmailAlreadyRegistered) {
+      throw new BusinessLogicError("Email is already registered");
+    }
+
+    const public_id = uuidv7();
+    const hashedPassword = await bcrypt.hash(
+      data.password,
+      Number(process.env.SALT_ROUNDS)
+    );
+
+    return await this.userRepository.createUser({
+      email: data.email,
+      password: hashedPassword,
+      public_id: public_id,
+    });
+  }
+
+  private async isUserFound(public_id: string): Promise<User> {
+    const user = await this.userRepository.findByPublicId(public_id);
+
+    if (!user) {
+      throw new NotFoundError("User not found");
+    }
+
+    return user;
   }
 }

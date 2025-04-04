@@ -33,8 +33,8 @@ export class UserRepository implements IUserRepository {
 
     return { users, total };
   }
-  async deleteUser(userId: number): Promise<User> {
-    return await this.prisma.user.delete({
+  async deleteUser(userId: number): Promise<void> {
+    await this.prisma.user.delete({
       where: {
         id: userId,
       },

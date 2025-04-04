@@ -10,7 +10,7 @@ export interface IUserRepository {
   createUser(data: UserRegisterRequest): Promise<User>;
   isEmailAlreadyRegistered(email: string): Promise<boolean>;
   updateUser(userId: number, data: UserUpdateRequest): Promise<User>;
-  deleteUser(userId: number): Promise<User>;
+  deleteUser(userId: number): Promise<void>;
   listUsers(
     filters?: { role?: Role; search?: string },
     pagination?: PaginationData
