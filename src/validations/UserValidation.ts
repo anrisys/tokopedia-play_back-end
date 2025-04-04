@@ -26,6 +26,8 @@ export class UserValidation {
       message: "Passwords don't match",
       path: ["confirm"],
     });
+  static readonly UPDATE: ZodType = z.object({});
 }
 
 export type CreateUserInput = z.infer<typeof UserValidation.REGISTER>;
+export type UpdateUserInput = z.infer<typeof UserValidation.UPDATE>;

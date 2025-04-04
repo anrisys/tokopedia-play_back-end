@@ -1,5 +1,6 @@
-import { User } from "@prisma/client";
-import { UserRegisterRequest } from "../../types";
+import { Role, User } from "@prisma/client";
+import { PaginationData, UserRegisterRequest } from "../../types";
+import { UserUpdateRequest } from "../../types/user";
 
 export interface IUserRepository {
   findById(id: number): Promise<User | null>;
@@ -8,4 +9,10 @@ export interface IUserRepository {
   findByEmail(email: string): Promise<User | null>;
   createUser(data: UserRegisterRequest): Promise<User>;
   isEmailAlreadyRegistered(email: string): Promise<boolean>;
+  updateUser(userId: number, data: UserUpdateRequest): Promise<User>;
+  deleteUser(userId: number): Promise<User>;
+  listUsers(
+    filters?: { role?: Role; search?: string },
+    pagination?: PaginationData
+  ): Promise<{ users: User[]; total: number }>;
 }
