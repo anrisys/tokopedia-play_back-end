@@ -20,31 +20,17 @@ const password = z
       "Password must contain at least one special character like !@#$%^&*",
   });
 
-export class UserValidation {
+export class AuthValidation {
   static readonly REGISTER = z
     .object({
       email: email,
       password: password,
       confirm: z.string(),
     })
-    .refine((data) => data.password === data.confirm, {
+    .refine((data) => data.password == data.confirm, {
       message: "Passwords don't match",
       path: ["confirm"],
     });
-  static readonly UPDATE = z
-    .object({
-      email: email,
-      password: password,
-      confirm: z.string(),
-    })
-    .refine((data) => data.password === data.confirm, {
-      message: "Passwords don't match",
-      path: ["confirm"],
-    });
-  static readonly SHOWPROFILE = z.object({
-    public_id: z.string().uuid({ message: "Invalid user ID format" }),
-  });
 }
 
-export type CreateUserInput = z.infer<typeof UserValidation.REGISTER>;
-export type UpdateUserInput = z.infer<typeof UserValidation.UPDATE>;
+export type RegisterRequestInput = z.infer<typeof AuthValidation.REGISTER>;

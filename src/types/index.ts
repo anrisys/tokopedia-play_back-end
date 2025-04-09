@@ -10,6 +10,12 @@ import {
   UserRegisterRequest,
 } from "./user";
 
+import { RegisterRequestData } from "./auth";
+import { RegisterRequestInput } from "../validations/AuthValidation";
+
+// Auth
+export { RegisterRequestInput, RegisterRequestData };
+
 export { CreateUserInput, UpdateUserInput };
 export { CommentResponse, CreateCommentRequest };
 export { CreateVideoRequest, VideoListResponse, VideoResponse };
