@@ -13,7 +13,7 @@ export function errorMiddleware(
 ) {
   // Handle know error types
   if (error instanceof ResponseError) {
-    return res.status(error.statusCode).json(error.toJSON());
+    res.status(error.statusCode).json(error.toJSON());
   }
 
   // Zod Validation Errors
@@ -28,7 +28,7 @@ export function errorMiddleware(
       {}
     );
 
-    return res.status(400).json(
+    res.status(400).json(
       new ValidationError(
         "Validation failed",
         details,
@@ -40,12 +40,12 @@ export function errorMiddleware(
   // Prisma Errors
   if (error instanceof Prisma.PrismaClientKnownRequestError) {
     const prismaError = handlePrismaError(error); // Extract to a helper function
-    return res.status(prismaError.statusCode).json(prismaError.toJSON());
+    res.status(prismaError.statusCode).json(prismaError.toJSON());
   }
 
   // Database Connection Errors
   if (error instanceof Prisma.PrismaClientInitializationError) {
-    return res
+    res
       .status(503)
       .json(
         new ResponseError(

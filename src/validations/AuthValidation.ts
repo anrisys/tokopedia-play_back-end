@@ -31,6 +31,10 @@ export class AuthValidation {
       message: "Passwords don't match",
       path: ["confirm"],
     });
+  static readonly LOGIN = z.object({
+    email: email,
+    password: password,
+  });
 }
 
 export type RegisterRequestInput = z.infer<typeof AuthValidation.REGISTER>;
