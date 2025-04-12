@@ -36,11 +36,20 @@ export class AuthController {
 
     const result = await this.authService.login({ email, password });
 
-    const response = new APISuccessResponse<LoginResponseData>(
+    res.cookie("accessToken", result.token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "none",
+      maxAge: 1000 * 60 * 60,
+    });
+
+    const response = new APISuccessResponse(
       "login_successful",
       "Successful login",
       200,
-      result
+      {
+        userId: result.userId,
+      }
     );
 
     res.status(response.statusCode || 200).json(response.toJSON());

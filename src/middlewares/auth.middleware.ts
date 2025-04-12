@@ -11,16 +11,14 @@ export function authenticateJWT(
   res: Response,
   next: NextFunction
 ) {
-  const authHeader = req.headers.authorization;
+  const accessToken = req.cookies.accessToken;
 
   try {
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    if (!accessToken) {
       throw new AuthenticationError("No token provided", "no_token_provided");
     }
 
-    const token = authHeader.split(" ")[1];
-
-    const decoded = verifyToken(token) as JwtPayload;
+    const decoded = verifyToken(accessToken) as JwtPayload;
     req.user = decoded;
     next();
   } catch (e) {
